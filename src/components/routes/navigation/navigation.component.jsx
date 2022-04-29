@@ -1,15 +1,19 @@
 import {Fragment} from "react";
 import {Outlet,Link} from "react-router-dom";
 import './navigation.styles.scss';
+import {ReactComponent as KyngLogo} from '../../../assets/kyng.svg';
 
 const Navigation=()=>{
   return (
       <Fragment>
           <div className={`navigation`}>
-              <Link className={'logo-container'} to={'/'}> <div>Logo</div></Link>
+              <Link className={'logo-container'} to={'/'}> <KyngLogo className={'logo'} /></Link>
               <div className={`nav-links-container`}>
-                  <Link classname={'nav-link'} to={'/shop'}>
+                  <Link className={'nav-link'} to={'/shop'}>
                       SHOP
+                  </Link>
+                  <Link className={'nav-link'} to={'/sign-in'}>
+                      SIGN IN
                   </Link>
 
               </div>

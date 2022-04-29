@@ -1,0 +1,46 @@
+import { initializeApp } from 'firebase/app';
+import {getAuth,signInWithRedirect,signInWithPopup,GoogleAuthProvider} from 'firebase/auth';
+import {getFirestore,doc,getDoc,setDoc} from 'firebase/firestore';
+
+const firebaseConfig ={
+    apiKey: 'AIzaSyAXJfuZNZk06nVMxiGQzRS57ehGRpOnElA',
+    authDomain: 'kyng-clothing-db.firebaseapp.com',
+    projectId: "kyng-clothing-db",
+    storageBucket: "kyng-clothing-db.appspot.com",
+    messagingSenderId: "223493029081",
+    appId: "1:223493029081:web:39e06edcd6b5db269392c8",
+    measurementId: "G-H69XPR6NLW"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({
+    prompt: 'select_account'
+});
+
+export const auth=getAuth();
+export const signInWithGooglePopup=()=>signInWithPopup(auth,provider);
+export const db= getFirestore();
+
+export const createUserDocumentFromAuth= async(userAuth)=> {
+    const userDocRef = doc(db, 'users', userAuth.uid);
+
+    const userSnapshot = await getDoc(userDocRef);
+   if (!userSnapshot.exists()){
+       const {displayName,email}=userAuth;
+       const createdAt= new Date();
+
+       try {
+           await setDoc(
+               userDocRef, {
+                   displayName,
+                   email,
+                   createdAt
+               }
+           );
+       }catch(error){
+           console.log('error creating the user',error.message);
+       }
+   }
+   return userDocRef;
+}
