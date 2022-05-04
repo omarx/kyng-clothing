@@ -3,7 +3,7 @@ body {
   font-family: 'Open Sans Condensed', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size:1.2em;
+  font-size:1.3em;
 }
 
 code {
@@ -18,4 +18,8 @@ a{
 
 *{
   box-sizing: border-box;
+}
+.swal2-popup {
+  font-size: 1.6em !important;
+  font-family: Georgia, serif;
 }

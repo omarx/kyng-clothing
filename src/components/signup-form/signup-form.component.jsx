@@ -4,6 +4,8 @@ import {createAuthUserWithEmailAndPassword,createUserDocumentFromAuth} from "../
 import FormInput from "../form-input/form-input.component";
 import './signup-form.styles.scss';
 import Button from "../button/button.component";
+import swal from 'sweetalert';
+
 const defaultFormFields={
     displayName:'',
     email:'',
@@ -22,15 +24,16 @@ const SignUpForm=()=>{
     const handleSubmit=async(e)=>{
         e.preventDefault();
         if(password !== confirmPassword){
-            alert('passwords do not match');
+            swal('passwords do not match');
             return;
         }
         try{
             const {user}= await createAuthUserWithEmailAndPassword(email,password);
             await createUserDocumentFromAuth(user, { displayName });
+            swal("Success","Your account has been created!","success");
             resetFormFields();
         }catch(err){
-            err.code=== 'auth/email-already-in-use'?alert('Cannot create user email in use'):
+            err.code=== 'auth/email-already-in-use'?swal("Oops...","Cannot create user email in use","error"):
             console.log('user creation error', err);
         }
     }
