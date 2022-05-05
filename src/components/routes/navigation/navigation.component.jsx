@@ -1,9 +1,12 @@
-import {Fragment} from "react";
+import {Fragment,useContext} from "react";
 import {Outlet,Link} from "react-router-dom";
 import './navigation.styles.scss';
 import {ReactComponent as KyngLogo} from '../../../assets/kyng.svg';
+import {UsersContext} from "../../../contexts/users.context";
 
 const Navigation=()=>{
+    const {currentUser}=useContext(UsersContext);
+    console.log(currentUser);
   return (
       <Fragment>
           <div className={`navigation`}>

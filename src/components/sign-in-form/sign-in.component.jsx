@@ -1,9 +1,10 @@
 //Reusable form fields for react
-import {useState} from "react";
+import {useState,useContext} from "react";
 import {signInWithGooglePopup,createUserDocumentFromAuth,signInAuthUserWithEmailAndPassword} from "../../utils/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import './sign-in-form.styles.scss'
 import Button from "../button/button.component";
+import {UsersContext} from "../../contexts/users.context";
 import swal from 'sweetalert';
 
 const defaultFormFields={
@@ -19,6 +20,7 @@ const SignInForm=()=>{
 
     const resetFormFields=()=> setFormFields(defaultFormFields);
 
+    const {setCurrentUser}= useContext(UsersContext);
     const signInWithGoogle=async()=>{
         const {user}= await signInWithGooglePopup();
         await createUserDocumentFromAuth(user);
@@ -29,10 +31,10 @@ const SignInForm=()=>{
     const handleSubmit=async(e)=> {
         e.preventDefault();
         try {
-            const response= await signInAuthUserWithEmailAndPassword(email,password);
+            const {user}= await signInAuthUserWithEmailAndPassword(email,password);
+            setCurrentUser(user);
             swal({icon:'success',
                 text:'You are now logged in!'})
-            console.log(response);
             resetFormFields();
         } catch (err) {
             switch(err.code) {
