@@ -1,10 +1,13 @@
 //Reusable form fields for react
-import {useState,useContext} from "react";
-import {signInWithGooglePopup,createUserDocumentFromAuth,signInAuthUserWithEmailAndPassword} from "../../utils/firebase.utils";
+//need to make message time out if not click in 5 secs
+import {useState} from "react";
+import {signInWithGooglePopup,
+    signInAuthUserWithEmailAndPassword
+} from "../../utils/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import './sign-in-form.styles.scss'
 import Button from "../button/button.component";
-import {UsersContext} from "../../contexts/users.context";
+
 import swal from 'sweetalert';
 
 const defaultFormFields={
@@ -20,31 +23,30 @@ const SignInForm=()=>{
 
     const resetFormFields=()=> setFormFields(defaultFormFields);
 
-    const {setCurrentUser}= useContext(UsersContext);
+
     const signInWithGoogle=async()=>{
-        const {user}= await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
-        swal({icon:'success',
-        text:'You are now logged in!'})
+        await signInWithGooglePopup()
+            swal({icon:'success',
+                text:'You are now logged in!',timer:3000})
     }
 
     const handleSubmit=async(e)=> {
         e.preventDefault();
         try {
-            const {user}= await signInAuthUserWithEmailAndPassword(email,password);
-            setCurrentUser(user);
-            swal({icon:'success',
-                text:'You are now logged in!'})
+             await signInAuthUserWithEmailAndPassword(email,password)
+                .then( swal({icon:'success',
+                text:'You are now logged in!',timer:3000}))
             resetFormFields();
         } catch (err) {
+            resetFormFields();
             switch(err.code) {
                 case 'auth/user-not-found':
-                    swal("Oops...", "User does not exist", "error");
                     resetFormFields()
+                    swal("Oops...", "User does not exist", "error");
                     break
                 case 'auth/wrong-password':
-                    swal("Oops...", "Incorrect Username or Password", "error");
                     resetFormFields()
+                    swal("Oops...", "Incorrect Username or Password", "error");
                     break
                 default:
                     console.log(err);
@@ -63,8 +65,10 @@ const SignInForm=()=>{
                 <FormInput label='Email' type='email' onChange={handleChange} name={`email`} value={email} required/>
                 <FormInput label='Password' type='password'  onChange={handleChange} name={`password`} value={password} required/>
                 <div className={'buttons-container'}>
-                    <Button  type={'submit'}>Sign In</Button>
-                <Button buttonType='google' onClick={signInWithGoogle}>Sign in with Google</Button>
+                    <Button type={'submit'}>Sign In</Button>
+                <Button buttonType='google' onClick={()=>{
+                    resetFormFields()
+                    signInWithGoogle()}}>Sign in with Google</Button>
                 </div>
             </form>
         </div>

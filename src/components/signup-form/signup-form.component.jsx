@@ -1,10 +1,14 @@
 //Reusable form fields for react
 import {useState} from "react";
-import {createAuthUserWithEmailAndPassword,createUserDocumentFromAuth} from "../../utils/firebase.utils";
+import {
+    createAuthUserWithEmailAndPassword,
+    createUserDocumentFromAuth
+} from "../../utils/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import './signup-form.styles.scss';
 import Button from "../button/button.component";
 import swal from 'sweetalert';
+
 
 const defaultFormFields={
     displayName:'',
@@ -18,19 +22,23 @@ const SignUpForm=()=>{
     const [formFields,setFormFields]=useState(defaultFormFields);
 
     const {displayName,email,password,confirmPassword}=formFields;
-
     const resetFormFields=()=> setFormFields(defaultFormFields);
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
         if(password !== confirmPassword){
-            swal('passwords do not match');
+            swal("Oops...","Passwords do not match","error");
             return;
         }
         try{
-            const {user}= await createAuthUserWithEmailAndPassword(email,password);
+            const {user}= await createAuthUserWithEmailAndPassword(
+                email,
+                password
+            );
+
             await createUserDocumentFromAuth(user, { displayName });
-            swal("Success","Your account has been created!","success");
+            swal({icon:'success',
+                title:'Success',text:'Your account has been created!',timer:3000})
             resetFormFields();
         }catch(err){
             err.code=== 'auth/email-already-in-use'?swal("Oops...","Cannot create user email in use","error"):
