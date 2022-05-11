@@ -3,7 +3,7 @@ import {Outlet,Link} from "react-router-dom";
 import './navigation.styles.scss';
 import {ReactComponent as KyngLogo} from '../../../assets/kyng.svg';
 import {UsersContext} from "../../../contexts/users.context";
-import {CartContext} from "../../../contexts/cart-item.context";
+import {CartContext} from "../../../contexts/cart.context";
 import {signOutUser} from "../../../utils/firebase.utils";
 import swal from 'sweetalert'
 import CartIcon from "../../cart-icon/cart-icon.component";
@@ -35,13 +35,13 @@ const Navigation=()=>{
                   <div>
                       {isCartOpen && <CartDropdown/>}
                   </div>
+                  
               </div>
 
           </div>
           <Outlet/>
       </Fragment>
   )
-
 }
 
 export default Navigation;
