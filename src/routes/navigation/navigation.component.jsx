@@ -1,4 +1,3 @@
-import { Fragment, useContext } from "react";
 import { Outlet } from "react-router-dom";
 import {
   NavigationContainer,
@@ -7,7 +6,7 @@ import {
   NavLink,
 } from "./navigation.styles";
 import { ReactComponent as KyngLogo } from "../../assets/kyng.svg";
-import { CartContext } from "../../contexts/cart.context";
+import { selectIsCartOpen } from "../../store/cart/cart.selector";
 import { signOutUser } from "../../utils/firebase.utils";
 import swal from "sweetalert";
 import CartIcon from "../../components/cart-icon/cart-icon.component";
@@ -17,10 +16,10 @@ import { selectCurrentUser } from "../../store/user/user.selector";
 
 const Navigation = () => {
   const currentUser = useSelector(selectCurrentUser);
-  const { isCartOpen } = useContext(CartContext);
+  const isCartOpen = useSelector(selectIsCartOpen);
 
   return (
-    <Fragment>
+    <>
       <NavigationContainer>
         <LogoContainer className={"logo-container"} to={"/"}>
           <KyngLogo className={"logo"} />
@@ -55,7 +54,7 @@ const Navigation = () => {
         </NavLinks>
       </NavigationContainer>
       <Outlet />
-    </Fragment>
+    </>
   );
 };
 
